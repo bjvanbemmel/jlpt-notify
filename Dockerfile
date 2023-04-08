@@ -6,4 +6,8 @@ COPY ./go.mod ./
 
 RUN go mod download
 
-CMD [ "go", "run", "." ]
+RUN go build -o ./bin/jlpt-notify .
+
+ENV TERM=xterm256color
+
+CMD [ "./bin/jlpt-notify" ]
