@@ -3,6 +3,7 @@ package scraper
 import (
 	"bytes"
 	"errors"
+	"os"
 	"time"
 
 	"github.com/bjvanbemmel/jlpt-notify/notifier"
@@ -23,7 +24,7 @@ var (
 )
 
 func (s ScrapeAgent) requestCallback(r *colly.Request) {
-	log.Infof("Scraping %s...", r.URL)
+	log.Printf("Scraping %s...", r.URL)
 }
 
 func (s *ScrapeAgent) scrapedCallback(r *colly.Response) {
@@ -40,8 +41,8 @@ func (s *ScrapeAgent) scrapedCallback(r *colly.Response) {
 	}
 
 	if s.Previous != page {
-		s.Notifier.SendMessage("Contents have changed.")
-		log.Warn("Contents have changed.")
+		s.Notifier.SendMessage("Contents have changed. Check https://jlpt-leiden.nl.")
+		log.Info("Contents have changed!")
 	}
 
 	s.Previous = page
@@ -83,11 +84,29 @@ func (s *ScrapeAgent) SetInterval(i time.Duration) error {
 	return nil
 }
 
+func (s *ScrapeAgent) CheckBackup() error {
+	if _, err := os.Stat("./tmp/page.backup"); err != nil {
+		return err
+	}
+
+	raw, err := os.ReadFile("./tmp/page.backup")
+	if err != nil {
+		return err
+	}
+
+	log.Info("Creating comparable page from backup.")
+	s.Previous = bytes.NewBuffer(raw).String()
+
+	return nil
+}
+
 func (s *ScrapeAgent) RunAgent() {
+	err := s.CheckBackup()
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		log.Error(err.Error())
+	}
 
 	for {
-		log.Info("New iteration started")
-
 		c := colly.NewCollector()
 
 		c.OnRequest(s.requestCallback)

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -29,25 +30,31 @@ func main() {
 	na.SetReceiver(os.Getenv("SMS_RECEIVER"))
 	na.SetRestClient(twilio.NewRestClient())
 
+	envInt := os.Getenv("SCRAPE_INTERVAL")
+	interval, err := strconv.Atoi(envInt)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
 	scraperAgent.SetNotifier(na)
-	scraperAgent.SetInterval(time.Second * 5)
+	scraperAgent.SetInterval(time.Second * time.Duration(interval))
 	scraperAgent.RunAgent()
 }
 
 func signalHandler(signal os.Signal) {
 	if signal == syscall.SIGTERM || signal == syscall.SIGINT || signal == syscall.SIGKILL {
-		log.Warn("Graceful exiting now...")
+		log.Warn("Gracefully exiting now...")
 
-        backup, err := os.Create("page.backup")
-        if err != nil {
-            log.Fatal(err.Error())
-        }
+		backup, err := os.Create("tmp/page.backup")
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 
-        if _, err := backup.WriteString(scraperAgent.Previous); err != nil {
-            log.Fatal(err.Error())
-        }
+		if _, err := backup.WriteString(scraperAgent.Previous); err != nil {
+			log.Fatal(err.Error())
+		}
 
-        log.Info("Successfully wrote backup to filesystem!")
+		log.Info("Successfully wrote backup to filesystem!")
 
 		os.Exit(1)
 	}

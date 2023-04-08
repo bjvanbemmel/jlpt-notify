@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/charmbracelet/log"
 	"github.com/twilio/twilio-go"
 	api "github.com/twilio/twilio-go/rest/api/v2010"
 )
@@ -55,7 +54,7 @@ func (n NotifyAgent) SendMessage(msg string) error {
 	params.SetFrom(n.Sender)
 	params.SetTo(n.Receiver)
 
-	// _, err := n.RestClient.Api.CreateMessage(params)
-	log.Info(msg)
-	return nil
+	_, err := n.RestClient.Api.CreateMessage(params)
+
+	return err
 }
