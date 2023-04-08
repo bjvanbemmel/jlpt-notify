@@ -15,7 +15,6 @@ type ScrapeAgent struct {
 	Collector *colly.Collector
 	Notifier  *notifier.NotifyAgent
 	Previous  string
-	Current   string
 }
 
 var (
@@ -49,15 +48,6 @@ func (s *ScrapeAgent) scrapedCallback(r *colly.Response) {
 }
 
 func (s *ScrapeAgent) SetPrevious(p []byte) error {
-	if p == nil {
-		return ErrArgNil
-	}
-	s.Previous = bytes.NewBuffer(p).String()
-
-	return nil
-}
-
-func (s *ScrapeAgent) SetCurrent(p []byte) error {
 	if p == nil {
 		return ErrArgNil
 	}
