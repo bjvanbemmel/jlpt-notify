@@ -17,8 +17,8 @@ It's possible to run this program without Docker as well, but be aware that my i
 You'd have to export the variables yourself, or include some way for the program to load an environment file by itself.
 
 ## Contribute
-- For bug reports, please write an [issue](https://github.com/bjvanbemmel/jlpt-notify/issues/new).
-- Want to add a new feature or improve an existing one? Fork the repository and create a [Pull Request](https://github.com/bjvanbemmel/jlpt-notify/compare).
+- For bug reports and suggestions, please write an [issue](https://github.com/bjvanbemmel/jlpt-notify/issues/new).
+- Want to add a new feature or improve an existing one? Fork the repository and create a [pull request](https://github.com/bjvanbemmel/jlpt-notify/compare).
 
 ## References and resources
 - [JLPT Leiden website](https://www.jlpt-leiden.nl/)
