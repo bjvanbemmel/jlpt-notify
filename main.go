@@ -16,13 +16,13 @@ var scraperAgent scraper.ScrapeAgent = scraper.ScrapeAgent{}
 var signalChannel chan os.Signal = make(chan os.Signal, 1)
 
 func main() {
-    signal.Notify(signalChannel)
+	signal.Notify(signalChannel)
 
-    go func() {
-        for {
-            signalHandler(<-signalChannel)
-        }
-    }()
+	go func() {
+		for {
+			signalHandler(<-signalChannel)
+		}
+	}()
 
 	na := &notifier.NotifyAgent{}
 	na.SetSender(os.Getenv("SMS_SENDER"))
@@ -35,11 +35,11 @@ func main() {
 }
 
 func signalHandler(signal os.Signal) {
-    log.Warn(signal.String())
+	log.Warn(signal.String())
 
-    if signal == syscall.SIGTERM || signal == syscall.SIGINT || signal == syscall.SIGKILL {
-        log.Warn("Graceful exiting now...")
+	if signal == syscall.SIGTERM || signal == syscall.SIGINT || signal == syscall.SIGKILL {
+		log.Warn("Graceful exiting now...")
 
-        os.Exit(1)
-    }
+		os.Exit(1)
+	}
 }
