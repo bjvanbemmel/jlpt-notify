@@ -35,10 +35,19 @@ func main() {
 }
 
 func signalHandler(signal os.Signal) {
-	log.Warn(signal.String())
-
 	if signal == syscall.SIGTERM || signal == syscall.SIGINT || signal == syscall.SIGKILL {
 		log.Warn("Graceful exiting now...")
+
+        backup, err := os.Create("page.backup")
+        if err != nil {
+            log.Fatal(err.Error())
+        }
+
+        if _, err := backup.WriteString(scraperAgent.Previous); err != nil {
+            log.Fatal(err.Error())
+        }
+
+        log.Info("Successfully wrote backup to filesystem!")
 
 		os.Exit(1)
 	}
