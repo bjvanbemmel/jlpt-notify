@@ -10,6 +10,10 @@ To install and use this program yourself, you may refer to the following steps:
 ```bash
 git clone https://github.com/bjvanbemmel/jlpt-notify
 cd jlpt-notify
+
+cp .env.example .env # Copy the example environment file so that Docker can make use of it
+# Don't forget to update the environment file. It contains your Twilio credentials and the crawling interval.
+
 docker compose up -d
 ```
 
