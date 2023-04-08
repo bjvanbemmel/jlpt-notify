@@ -3,7 +3,7 @@ A small Go program that checks the [JLPT Leiden](https://jlpt-leiden.nl) website
 
 ## Why?
 I missed out on registrations for the JLPT exam this year because I couldn't register in time. I want
-to avoid a similar situation this year by making sure that I know about the opening of the registrations the moment of.
+to avoid a similar situation next year by getting a notification the moment registrations open up.
 
 ## References and resources
 - [JLPT Leiden website](https://www.jlpt-leiden.nl/)

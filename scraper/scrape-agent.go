@@ -113,7 +113,7 @@ func (s *ScrapeAgent) RunAgent() {
 		c.OnScraped(s.scrapedCallback)
 		s.SetCollector(c)
 
-		s.Collector.Visit("http://192.168.2.15:8080")
+		s.Collector.Visit("https://jlpt-leiden.nl")
 
 		time.Sleep(s.Interval)
 	}

@@ -37,7 +37,7 @@ func main() {
 	}
 
 	scraperAgent.SetNotifier(na)
-	scraperAgent.SetInterval(time.Second * time.Duration(interval))
+	scraperAgent.SetInterval(time.Minute * time.Duration(interval))
 	scraperAgent.RunAgent()
 }
 
