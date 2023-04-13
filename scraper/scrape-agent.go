@@ -19,8 +19,9 @@ type ScrapeAgent struct {
 }
 
 var (
-	ErrArgNil    error = errors.New("Argument may not be nil.")
-	ErrPageEmpty error = errors.New("Scraped page's body is empty.")
+	ErrArgNil      error = errors.New("Argument may not be nil.")
+	ErrPageEmpty   error = errors.New("Scraped page's body is empty.")
+	ErrTargetEmpty error = errors.New("The scrape target may not be empty. Please provide a valid URI.")
 )
 
 func (s ScrapeAgent) requestCallback(r *colly.Request) {
@@ -100,10 +101,15 @@ func (s *ScrapeAgent) CheckBackup() error {
 	return nil
 }
 
-func (s *ScrapeAgent) RunAgent() {
+func (s *ScrapeAgent) RunAgent() error {
+	target := os.Getenv("SCRAPE_TARGET_URI")
+	if target == "" {
+		return ErrTargetEmpty
+	}
+
 	err := s.CheckBackup()
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		log.Error(err.Error())
+		return err
 	}
 
 	for {
@@ -113,7 +119,9 @@ func (s *ScrapeAgent) RunAgent() {
 		c.OnScraped(s.scrapedCallback)
 		s.SetCollector(c)
 
-		s.Collector.Visit("https://jlpt-leiden.nl")
+		if err := s.Collector.Visit(target); err != nil {
+			return err
+		}
 
 		time.Sleep(s.Interval)
 	}

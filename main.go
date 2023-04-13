@@ -26,8 +26,15 @@ func main() {
 	}()
 
 	na := &notifier.NotifyAgent{}
-	na.SetSender(os.Getenv("SMS_SENDER"))
-	na.SetReceiver(os.Getenv("SMS_RECEIVER"))
+
+	if err := na.SetSender(os.Getenv("SMS_SENDER")); err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if err := na.SetReceiver(os.Getenv("SMS_RECEIVER")); err != nil {
+		log.Fatal(err.Error())
+	}
+
 	na.SetRestClient(twilio.NewRestClient())
 
 	envInt := os.Getenv("SCRAPE_INTERVAL")
@@ -36,9 +43,17 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	scraperAgent.SetNotifier(na)
-	scraperAgent.SetInterval(time.Minute * time.Duration(interval))
-	scraperAgent.RunAgent()
+	if err := scraperAgent.SetNotifier(na); err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if err := scraperAgent.SetInterval(time.Minute * time.Duration(interval)); err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if err := scraperAgent.RunAgent(); err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 func signalHandler(signal os.Signal) {
