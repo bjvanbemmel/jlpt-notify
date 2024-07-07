@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"strconv"
@@ -42,6 +43,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	na.SendMessage(fmt.Sprintf("JLPT-Notify has started scraping %s...", os.Getenv("SCRAPE_TARGET_URI")))
 
 	if err := scraperAgent.SetNotifier(na); err != nil {
 		log.Fatal(err.Error())
