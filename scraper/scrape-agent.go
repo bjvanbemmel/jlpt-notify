@@ -3,6 +3,7 @@ package scraper
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -42,7 +43,7 @@ func (s *ScrapeAgent) scrapedCallback(r *colly.Response) {
 	}
 
 	if s.Previous != page {
-		s.Notifier.SendMessage("Contents have changed. Check https://jlpt-leiden.nl.")
+		s.Notifier.SendMessage(fmt.Sprintf("Contents have changed. Check %s.", os.Getenv("SCRAPE_TARGET_URI")))
 		log.Info("Contents have changed!")
 	}
 
