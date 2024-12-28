@@ -47,7 +47,8 @@ func (n *NotifyAgent) SetRestClient(r *twilio.RestClient) error {
 }
 
 func (n NotifyAgent) SendMessage(msg string) error {
-	msg = fmt.Sprintf("[%v] %s", time.Now().Format("02-01-2006 15:04:05"), msg)
+	tz, _ := time.LoadLocation("Europe/Amsterdam")
+	msg = fmt.Sprintf("[%v] %s", time.Now().In(tz).Format("02-01-2006 15:04:05"), msg)
 
 	params := &api.CreateMessageParams{}
 	params.SetBody(msg)

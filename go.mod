@@ -1,6 +1,6 @@
 module github.com/bjvanbemmel/jlpt-notify
 
-go 1.19
+go 1.21
 
 require (
 	github.com/charmbracelet/log v0.2.1

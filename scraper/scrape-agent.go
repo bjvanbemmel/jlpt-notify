@@ -29,25 +29,25 @@ func (s ScrapeAgent) requestCallback(r *colly.Request) {
 	log.Printf("Scraping %s...", r.URL)
 }
 
-func (s *ScrapeAgent) scrapedCallback(r *colly.Response) {
-	page := bytes.NewBuffer(r.Body).String()
+func (s *ScrapeAgent) scrapedCallback(content string) {
+	log.Info(s.Previous)
 
-	if page == "" {
+	if content == "" {
 		log.Error(ErrPageEmpty)
 		return
 	}
 
 	if s.Previous == "" {
-		s.Previous = page
+		s.Previous = content
 		return
 	}
 
-	if s.Previous != page {
+	if s.Previous != content {
 		s.Notifier.SendMessage(fmt.Sprintf("Contents have changed. Check %s.", os.Getenv("SCRAPE_TARGET_URI")))
 		log.Info("Contents have changed!")
 	}
 
-	s.Previous = page
+	s.Previous = content
 }
 
 func (s *ScrapeAgent) SetPrevious(p []byte) error {
@@ -117,7 +117,9 @@ func (s *ScrapeAgent) RunAgent() error {
 		c := colly.NewCollector()
 
 		c.OnRequest(s.requestCallback)
-		c.OnScraped(s.scrapedCallback)
+		c.OnHTML("main", func(e *colly.HTMLElement) {
+			s.scrapedCallback(e.DOM.Find("section").First().Find("div").Eq(3).Text())
+		})
 		s.SetCollector(c)
 
 		if err := s.Collector.Visit(target); err != nil {
