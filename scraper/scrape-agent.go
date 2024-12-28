@@ -30,8 +30,6 @@ func (s ScrapeAgent) requestCallback(r *colly.Request) {
 }
 
 func (s *ScrapeAgent) scrapedCallback(content string) {
-	log.Info(s.Previous)
-
 	if content == "" {
 		log.Error(ErrPageEmpty)
 		return
